@@ -38,6 +38,6 @@ const login = async(req, resp)=>{
     
 }
 
-module.export={
+module.exports={
     signup, login
 };
