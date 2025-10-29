@@ -9,7 +9,7 @@ const signup = async (req, resp) => {
         console.log(req.body);
         const {name, email, password} = req.body;
         const existingUser = await User.findOne({email});
-        if (existingUser) return resp.state(409).json({'message': 'User already exists'});
+        if (existingUser) return resp.status(409).json({'message': 'User already exists'});
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const savedUser = await User.create({
@@ -18,7 +18,8 @@ const signup = async (req, resp) => {
         resp.status(201).json({'message': 'User Created Successfully', userId: savedUser._id});
 
     } catch (e) {
-        resp.status(500).json({'message': 'Signup Error', error: e});
+        console.error('Signup error:', e);
+        resp.status(500).json({'message': 'Signup Error', error: e.message});
     }
 }
 
@@ -35,7 +36,8 @@ const login = async (req, resp) => {
         resp.status(200).json({'message':'success!', token:token});
 
     }catch (e) {
-        resp.status(500).json({'message': 'Login Error', error: e});
+        console.error('Login error:', e);
+        resp.status(500).json({'message': 'Login Error', error: e.message});
     }
 }
 
