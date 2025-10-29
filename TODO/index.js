@@ -1,28 +1,31 @@
+// express, nodemon, dotenv, mongoose, bcrypt, jsonwebtoken, body-parser
 const express = require('express');
+const bodyParser = require('body-parser')
 require('dotenv').config();
 const mongoose = require('mongoose');
-
 const app = express();
 
-const UserRoute = require('./routes/UserRoutes');
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded())
+
+// parse application/json
+app.use(bodyParser.json())
+
+const UserRoute= require('./routes/UserRoute');
 
 const PORT = process.env.SERVER_PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/todoapp';
 
 mongoose.connect(MONGO_URI)
     .then(()=>{
-        console.log('MongoDb connected');
-        app.listen(PORT,()=>{
+        console.log("Mongo db connected");
+        app.listen(PORT, ()=>{
             console.log(`server started and running on port ${PORT}`);
         });
-    }).catch((error)=>console.log('MongoDb error', error));
+    }).catch((error)=>console.error('Mongo Db Error', error));
 
-app.listen(PORT,()=>{
-    console.log(' server started and running on port 3000');
+app.get('/test', (req, resp)=>{
+    return resp.json({'message':'server started!'})
 });
 
-app.get('/test',(req,resp)=>{
-    return resp.json({'massage':'server started'})
-});
-
-app.use('/api/v1/users', UserRoute);
+app.use('/api/v1/users', UserRoute); // http://localhost:3000/api/v1/users/signup
