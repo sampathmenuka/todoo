@@ -66,12 +66,13 @@ const findTodoById = async(req,resp)=>{
  
 const updateTodoStatus = async(req,resp)=>{
     try{ 
+        const {status} = req.body;
         const selectedUser = await User.findOne({email:req.userEmail});
         if(!selectedUser){
             return resp.status(404).json({massage:'User not found'});
         }
         const todo = await Todo.findOneAndUpdate({_id: req.params.id, user:selectedUser._id},
-            {isCompleted:true},{new:true}
+            {isCompleted:status},{new:true}
         );
         if(!todo) return resp.status(404).json({'massage':"Not found"});
         resp.status(201).json({todo});
