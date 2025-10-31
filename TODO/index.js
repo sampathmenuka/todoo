@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
 
 const UserRoute= require('./routes/UserRoute');
+const TodoRoute= require('./routes/TodoRoute');
 
 const PORT = process.env.SERVER_PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/todoapp';
@@ -29,3 +30,4 @@ app.get('/test', (req, resp)=>{
 });
 
 app.use('/api/v1/users', UserRoute); // http://localhost:3000/api/v1/users/signup
+app.use('/api/v1/todos', TodoRoute); // http://localhost:3000/api/v1/users/signup
