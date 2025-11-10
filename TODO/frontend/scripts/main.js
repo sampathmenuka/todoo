@@ -2,10 +2,17 @@ function getCookie(name){
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if(parts.length===2){
-        return
+        return parts.pop().split(';').shift();
     }
 }
 
-document.getElementById('btncreate').addEventListener("click", function() {
+document.getElementById('btncreate')
+.addEventListener("click", function() {
+    const token = getCookie('token');
+    if(token){
+        window.location.href='dashboard.html';
+    }else{
+        window.location.href='login.html';
+    }
     
 });

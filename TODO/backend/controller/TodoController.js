@@ -1,5 +1,5 @@
 const Todo = require('../model/TodoSchema');
-const Todo = require('../model/UserScema');
+const User = require('../model/UserScema');
 
 const createTodo = async(req,resp)=>{
     try{

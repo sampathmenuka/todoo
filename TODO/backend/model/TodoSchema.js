@@ -3,11 +3,11 @@ const TodoSchema = new mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'user',
-        require:true
+        required:true
     },
     title:{
         type:String,
-        require:true,
+        required:true,
     },
     description:{
         type:String,
@@ -17,8 +17,8 @@ const TodoSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    dueData:{
-        type:date
+    dueDate:{
+        type:Date
     },
     
 
