@@ -1,9 +1,11 @@
 // express, nodemon, dotenv, mongoose, bcrypt, jsonwebtoken, body-parser
 const express = require('express');
 const bodyParser = require('body-parser')
+const cors = require('cors');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const app = express();
+app.use(cors());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded())

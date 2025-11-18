@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="../styles/signup.css">
 </head>
 <body>
-    <body>
     <div class="outer">
             <div class="context">
             <h4>Register Here</h4>
@@ -28,7 +27,7 @@
             </div>
             <br>
             <div class="col-12">
-                <button class="col-12 btn btn-primary btn-sm">Signup</button>
+                <button class="col-12 btn btn-primary btn-sm" id="signup">Signup</button>
             </div>
     
 
@@ -43,8 +42,8 @@
     <script>
         document.getElementById('signup').addEventListener('click',function(){
             const name = $('#name').val().trim();
-            const name = $('#email').val().trim();
-            const name = $('#password').val().trim();
+            const email = $('#email').val().trim();
+            const password = $('#password').val().trim();
 
             if(!name || !email || !password){
                 alert('please fill all fields');
@@ -53,11 +52,19 @@
 
             $.ajax({
                 url:'http://localhost:3000/api/v1/users/signup',
-                type:'POST'
-                contentType
+                type:'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({name:name, email:email, password:password}),
+                success:function(resp){
+                    alert('Registration succesfull! Redirecting to login');
+                    window.location.href='login.html';
+                },
+                error :function (xhr,status,err){
+                    console.log(err);
+                    alert('Registraion Failed!'+(xhr.responseJSON?.massage) || "please try again!")
+                }
             })
-        });
+        })
     </script>
-</body>
 </body>
 </html>
