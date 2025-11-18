@@ -42,14 +42,17 @@
         function setCookie(name, value, days){
             let expires = "";
             if (days){
-                const date = new date();
+                const date = new Date();
                 date.setTime(date.getTime() + (days*24*60*60*1000));
-                expires = "; expires+ date.toUTCString();
+                expires = "; expires=" + date.toUTCString();
+            }
+            console.log(name, value, days);
+            document.cookie = name + '=' + value + expires + ";path=/";
         }
-        document.cookie = name + '=' +value+expires+";path=/";
-    }
 
         document.getElementById('login').addEventListener('click',function(){ 
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
             if(!email || !password){
                 alert('please fill all fields');
@@ -68,7 +71,7 @@
                 },
                 error :function (xhr,status,err){
                     console.log(err);
-                    alert('Login Failed! '+(xhr.responseJSON?.massage) || "please try again!")
+                    alert('Login Failed! '+(xhr.responseJSON?.message || "please try again!"));
                 }
             })
         })
