@@ -40,6 +40,10 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+        const token = localStorage.getItem('token');
+        if(token){
+            window.location.href='dashboard.html';
+        }
         document.getElementById('signup').addEventListener('click',function(){
             const name = $('#name').val().trim();
             const email = $('#email').val().trim();

@@ -39,7 +39,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
 
-        function setCookie(name, value, days){
+        const token = localStorage.getItem('token');
+        if(token){
+            window.location.href='dashboard.html';
+        }
+
+        /*function setCookie(name, value, days){
             let expires = "";
             if (days){
                 const date = new Date();
@@ -48,7 +53,7 @@
             }
             console.log(name, value, days);
             document.cookie = name + '=' + value + expires + ";path=/";
-        }
+        }*/
 
         document.getElementById('login').addEventListener('click',function(){ 
             const email = document.getElementById('email').value;
@@ -66,8 +71,9 @@
                 data: JSON.stringify({email:email, password:password}),
                 success:function(resp){
                     alert('Login succesfull! Redirecting to dashboard');
-                    setCookie('token',resp.token,1);
-                    window.location.href='dashboard.html';
+                    //setCookie('token',resp.token,1);
+                    localStorage.setItem('token',resp.token);
+                    //window.location.href='dashboard.html';
                 },
                 error :function (xhr,status,err){
                     console.log(err);
