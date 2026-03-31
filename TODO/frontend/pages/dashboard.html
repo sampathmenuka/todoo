@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../styles/dashboard.css">
 </head>
 <body>
-<div class="header-outer">
+<div class="header-outer" style="margin-bottom: 50px;">
     <div class="logo">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Todoist_logo.png" alt="">
     </div>
@@ -18,6 +18,42 @@
         <button id="btnLogout" class="btn btn-primary btn-sm">Logout</button>
     </div>
 </div>
+
+<div class="container" >
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        + Add new Todo
+                    </h5>
+                </div>
+                <div class="card-body">
+                   <form id="todoForm">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="todotitle" class="form-label">Title *</label>
+                                <input type="text" class="form-control" id="todotitle" placeholder="Enter todo title">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="todoDescription" class="form-label">Description *</label>
+                                <input type="text" class="form-control" id="todoDescription" placeholder="Enter todo description">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="todoDuedate" class="form-label">Due date *</label>
+                                <input type="text" class="form-control" id="todoDuedate" placeholder="Enter due date">
+                            </div>
+                            <div class="col-12">
+                                <button class="btn col-12 btn-primary" type="submit">Add Todo </button>
+                            </div>
+                        </div>
+                   </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 
     const token = localStorage.getItem('token');
