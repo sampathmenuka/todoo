@@ -243,6 +243,10 @@ nav button {
     align-items: center;
     justify-content: center;
     border-radius: 40px;
+    transition: transform 0.3s ease;
+}
+.c1:hover {
+    transform: scale(1.05);
 }
 .c1 img {
     height: 50px;
@@ -293,6 +297,12 @@ nav button {
     text-align: center;
     font-size: 14px;
     padding: 5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+.bcard:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 .ci {
     border-radius: 20px;

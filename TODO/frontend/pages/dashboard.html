@@ -5,17 +5,17 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Dashboard | TODO List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../styles/dashboard.css">
 </head>
-<body>
-<div class="header-outer" style="margin-bottom: 50px;">
+<body class="bg-light">
+<div class="header-outer bg-white" style="margin-bottom: 50px;">
     <div class="logo">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Todoist_logo.png" alt="">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Todoist_logo.png" alt="Todo Logo">
     </div>
     <div class="signup">
-        <button id="btnLogout" class="btn btn-primary btn-sm">Logout</button>
+        <button id="btnLogout" class="btn btn-outline-danger btn-sm fw-bold">Logout</button>
     </div>
 </div>
 
@@ -32,40 +32,48 @@
                    <form id="todoForm">
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label for="todotitle" class="form-label">Title *</label>
+                                <label for="todotitle" class="form-label text-secondary fw-semibold">Title *</label>
                                 <input type="text" class="form-control" id="todotitle" placeholder="Enter todo title">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label for="todoDescription" class="form-label">Description *</label>
+                                <label for="todoDescription" class="form-label text-secondary fw-semibold">Description *</label>
                                 <input type="text" class="form-control" id="todoDescription" placeholder="Enter todo description">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label for="todoDuedate" class="form-label">Due date *</label>
-                                <input type="text" class="form-control" id="todoDuedate" placeholder="Enter due date">
+                                <label for="todoDuedate" class="form-label text-secondary fw-semibold">Due date *</label>
+                                <input type="date" class="form-control" id="todoDuedate">
                             </div>
-                            <div class="col-12">
-                                <button class="btn col-12 btn-primary" type="submit">Add Todo </button>
+                            <div class="col-12 mt-2">
+                                <button class="btn w-100 btn-primary fw-bold" type="submit">Add Todo </button>
                             </div>
                         </div>
                    </form>
                 </div>
             </div>
         </div>
-        <div class="col-12">
-            <ul class="nav nav-tabs mb-4" id="todotabs">
-                <li class="nav-tabs mb-4">
-                    <li class="nav-item">
-                        <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all">All Todos</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending">Pending Todos</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link active" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed">Completed Todos</button>
-                    </li>
+        <div class="col-12 mt-5">
+            <ul class="nav nav-pills mb-4 gap-2" id="todotabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active rounded-pill fw-semibold border" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab" aria-selected="true">All Todos</button>
                 </li>
-
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link rounded-pill fw-semibold border text-dark" id="pending-tab" data-bs-toggle="pill" data-bs-target="#pending" type="button" role="tab" aria-selected="false">Pending Todos</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link rounded-pill fw-semibold border text-dark" id="completed-tab" data-bs-toggle="pill" data-bs-target="#completed" type="button" role="tab" aria-selected="false">Completed Todos</button>
+                </li>
             </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="all" role="tabpanel" tabindex="0">
+                    <div class="list-group" id="allTodoList"></div>
+                </div>
+                <div class="tab-pane fade" id="pending" role="tabpanel" tabindex="0">
+                    <div class="list-group" id="pendingTodoList"></div>
+                </div>
+                <div class="tab-pane fade" id="completed" role="tabpanel" tabindex="0">
+                    <div class="list-group" id="completedTodoList"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -79,8 +87,89 @@
 
     document.getElementById('btnLogout').addEventListener('click', function (){
         localStorage.removeItem('token');
-        window.location.href='index.html';
-    })
+        window.location.href='../index.html';
+    });
+
+    const todoForm = document.getElementById('todoForm');
+    
+    async function fetchTodos() {
+        try {
+            // Fetch pending
+            const reqUser = { headers: { 'Authorization': `Bearer ${token}` } };
+            const pendingRes = await fetch('http://localhost:3000/api/v1/todos/pending', { method: 'POST', ...reqUser });
+            const pendingData = await pendingRes.json();
+            const pending = pendingData.todos || [];
+
+            // Fetch completed
+            const completedRes = await fetch('http://localhost:3000/api/v1/todos/completed', { method: 'POST', ...reqUser });
+            const completedData = await completedRes.json();
+            const completed = completedData.todos || [];
+
+            renderTodos(pending, completed);
+        } catch (error) {
+            console.error("Error fetching todos:", error);
+        }
+    }
+
+    function createTodoElement(todo) {
+        return `
+            <div class="list-group-item d-flex justify-content-between align-items-center mb-2 shadow-sm border-0 rounded">
+                <div>
+                    <h6 class="mb-1 ${todo.isCompleted ? 'text-decoration-line-through text-muted' : ''}">${todo.title}</h6>
+                    <small class="text-muted d-block">${todo.description}</small>
+                    <small class="text-muted">Due: ${new Date(todo.dueDate).toLocaleDateString()}</small>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderTodos(pending, completed) {
+        const allList = document.getElementById('allTodoList');
+        const pendingList = document.getElementById('pendingTodoList');
+        const completedList = document.getElementById('completedTodoList');
+
+        const pendingHTML = pending.map(createTodoElement).join('');
+        const completedHTML = completed.map(createTodoElement).join('');
+
+        pendingList.innerHTML = pendingHTML || '<p class="text-muted p-3">No pending todos.</p>';
+        completedList.innerHTML = completedHTML || '<p class="text-muted p-3">No completed todos.</p>';
+        allList.innerHTML = pendingHTML + completedHTML || '<p class="text-muted p-3">No todos found.</p>';
+    }
+
+    todoForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const title = document.getElementById('todotitle').value;
+        const description = document.getElementById('todoDescription').value;
+        const dueDate = document.getElementById('todoDuedate').value;
+
+        if(!title || !description || !dueDate) return alert("Please fill all fields");
+
+        try {
+            const resp = await fetch('http://localhost:3000/api/v1/todos/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ title, description, dueDate })
+            });
+
+            if (resp.ok) {
+                todoForm.reset();
+                fetchTodos(); // Refresh the list
+            } else {
+                alert("Failed to create todo");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Error creating todo");
+        }
+    });
+
+    // Initial fetch
+    fetchTodos();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
